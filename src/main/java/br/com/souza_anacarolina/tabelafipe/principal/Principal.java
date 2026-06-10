@@ -1,8 +1,6 @@
 package br.com.souza_anacarolina.tabelafipe.principal;
 
-import br.com.souza_anacarolina.tabelafipe.model.DadosModelo;
-import br.com.souza_anacarolina.tabelafipe.model.DadosVeiculo;
-import br.com.souza_anacarolina.tabelafipe.model.ModelosResponse;
+import br.com.souza_anacarolina.tabelafipe.model.*;
 import br.com.souza_anacarolina.tabelafipe.service.ConsumoApi;
 import br.com.souza_anacarolina.tabelafipe.service.ConverteDados;
 
@@ -92,5 +90,20 @@ public class Principal {
             System.out.println(m.codigo() + " - " + m.nome());
         }
 
+        System.out.println("\nInforme o ano desejado\n");
+        var anoModelo = scanner.nextLine();
+
+        String codigoAnoModeloEscolhido = String.valueOf(anosOrdenados.stream()
+                .filter(m -> m.codigo().contains(anoModelo))
+                        .map(DadosModelo::codigo)
+                .findFirst().orElse(null));
+
+        json = consumoApi.obterDados(ENDERECO + tipo + "/marcas/" + codigoMarcaEscolhida + "/modelos/" + codigoModeloEscolhido + "/anos/" + codigoAnoModeloEscolhido);
+
+        DetalheVeiculo detalheVeiculo = converteDados.obterDados(json, DetalheVeiculo.class);
+
+        InformacoesVeiculo informacoesVeiculo = new InformacoesVeiculo(detalheVeiculo);
+
+        System.out.println(informacoesVeiculo);
     }
 }
