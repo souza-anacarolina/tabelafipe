@@ -49,7 +49,7 @@ public class Principal {
         var nomeMarca = scanner.nextLine();
 
         String codigoMarcaEscolhida = String.valueOf(marcasOrdenadas.stream()
-                .filter(m -> m.nome().contains(nomeMarca))
+                .filter(m -> m.nome().toLowerCase().contains(nomeMarca.toLowerCase()))
                 .map(DadosVeiculo::codigo)
                 .findFirst().orElse(null));
 
@@ -73,8 +73,13 @@ public class Principal {
         var nomeModelo = scanner.nextLine();
 
         String codigoModeloEscolhido = String.valueOf(modelosOrdenados.stream()
-                .filter(m -> m.nome().contains(nomeModelo))
+                .filter(m -> m.nome().toLowerCase().contains(nomeModelo.toLowerCase()))
                 .map(DadosVeiculo::codigo)
+                .findFirst().orElse(null));
+
+        String nomeModeloEscolhido = String.valueOf(modelosOrdenados.stream()
+                .filter(m -> m.nome().toLowerCase().contains(nomeModelo.toLowerCase()))
+                .map(DadosVeiculo::nome)
                 .findFirst().orElse(null));
 
         json = consumoApi.obterDados(ENDERECO + tipo + "/marcas/" + codigoMarcaEscolhida + "/modelos/" + codigoModeloEscolhido + "/anos");
@@ -85,7 +90,7 @@ public class Principal {
                 .sorted(Comparator.comparing(DadosModelo::codigo))
                 .collect(Collectors.toList());
 
-        System.out.println("\nANOS DO MODELO " + nomeModelo);
+        System.out.println("\nANOS DO MODELO " + nomeModeloEscolhido);
         for (DadosModelo m : anosOrdenados) {
             System.out.println(m.codigo() + " - " + m.nome());
         }
