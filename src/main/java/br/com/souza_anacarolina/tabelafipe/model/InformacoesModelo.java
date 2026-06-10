@@ -1,12 +1,10 @@
 package br.com.souza_anacarolina.tabelafipe.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-public class InformacoesVeiculo {
+public class InformacoesModelo {
 
     String Valor;
     String Marca;
@@ -19,7 +17,7 @@ public class InformacoesVeiculo {
     Locale ptBr = new Locale("pt", "BR");
     DateTimeFormatter formatador = DateTimeFormatter.ofPattern("EEEE, dd 'de' MMMM 'de' yyyy HH:mm", ptBr);
 
-    public InformacoesVeiculo(DetalheVeiculo detalheVeiculo) {
+    public InformacoesModelo(DetalheVeiculo detalheVeiculo) {
         this.AnoModelo = detalheVeiculo.AnoModelo();
         this.Marca = detalheVeiculo.Marca();
         this.Modelo = detalheVeiculo.Modelo();
@@ -59,14 +57,15 @@ public class InformacoesVeiculo {
 
     @Override
     public String toString() {
-        return "Informações do Veiculo" +
-                "\nMês de Referência: " + MesReferencia + "\n" +
-                "Código Fipe: " + CodigoFipe  + "\n" +
-                "Marca: " + Marca +  "\n" +
-                "Modelo: " + Modelo  + "\n" +
-                "Ano Modelo: " + AnoModelo + "\n" +
-                "Combustível: " + Combustivel  + "\n" +
-                "Data da consulta: " + dataConsulta.format(formatador)  + "\n" +
-                "Valor: " + Valor
-                ;}
+        return
+                "Mês de Referência: " + MesReferencia + "\n" +
+                        "Código Fipe: " + CodigoFipe + "\n" +
+                        "Marca: " + Marca + "\n" +
+                        "Modelo: " + Modelo + "\n" +
+                        "Ano Modelo: " + AnoModelo + "\n" +
+                        "Combustível: " + Combustivel + "\n" +
+                        "Data da consulta: " + dataConsulta.format(formatador) + "\n" +
+                        "Preço Médio: " + Valor
+                ;
+    }
 }
