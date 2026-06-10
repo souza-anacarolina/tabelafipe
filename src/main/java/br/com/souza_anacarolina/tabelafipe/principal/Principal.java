@@ -48,9 +48,15 @@ public class Principal {
             System.out.println(m.codigo() + " - " + m.nome());
         }
 
-        System.out.println("\nDe acordo com a listagem acima informe o código da marca que deseja visualizar");
-        var codigoMarca = URLEncoder.encode(scanner.nextLine().toLowerCase(), StandardCharsets.UTF_8);
-        json = consumoApi.obterDados(ENDERECO + tipo + "/marcas/" + codigoMarca + "/modelos");
+        System.out.println("\nInforme o nome da marca que deseja visualizar\n");
+        var nomeMarca = URLEncoder.encode(scanner.nextLine().toLowerCase(), StandardCharsets.UTF_8);
+
+        String codigoMarcaEscolhida = String.valueOf(marcasOrdenadas.stream()
+                .filter(m -> m.nome().equalsIgnoreCase(nomeMarca))
+                .map(DadosVeiculo::codigo)
+                .findFirst().orElse(0));
+
+        json = consumoApi.obterDados(ENDERECO + tipo + "/marcas/" + codigoMarcaEscolhida + "/modelos");
 
         ModelosResponse response = converteDados.obterDados(json, ModelosResponse.class);
 
@@ -60,14 +66,8 @@ public class Principal {
                 .sorted(Comparator.comparing(DadosVeiculo::codigo))
                 .collect(Collectors.toList());
 
-        int codigo = Integer.parseInt(codigoMarca);
 
-        String nomeMarcaEscolhida = marcasOrdenadas.stream()
-                        .filter(m -> m.codigo() == codigo)
-                                .map(DadosVeiculo::nome)
-                                        .findFirst().orElse("Marca não encontrada");
-
-        System.out.println("\nMODELOS DA MARCA " + nomeMarcaEscolhida + "\n");
+        System.out.println("\nMODELOS DA MARCA " + nomeMarca + "\n");
         for (DadosVeiculo m : modelosOrdenados) {
             System.out.println(m.codigo() + " - " + m.nome());
         }
