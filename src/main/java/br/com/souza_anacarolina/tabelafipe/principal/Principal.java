@@ -1,12 +1,11 @@
 package br.com.souza_anacarolina.tabelafipe.principal;
 
+import br.com.souza_anacarolina.tabelafipe.model.DadosModelo;
 import br.com.souza_anacarolina.tabelafipe.model.DadosVeiculo;
 import br.com.souza_anacarolina.tabelafipe.model.ModelosResponse;
 import br.com.souza_anacarolina.tabelafipe.service.ConsumoApi;
 import br.com.souza_anacarolina.tabelafipe.service.ConverteDados;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -30,7 +29,7 @@ public class Principal {
                 "MOTO\n\n" +
                 "Com qual opção gostaria de prosseguir?");
 
-        var tipo = URLEncoder.encode(scanner.nextLine().toLowerCase(), StandardCharsets.UTF_8);
+        var tipo = scanner.nextLine().toLowerCase();
 
         if (tipo.equals("carro")) tipo = "carros";
         if (tipo.equals("moto")) tipo = "motos";
@@ -48,19 +47,19 @@ public class Principal {
             System.out.println(m.codigo() + " - " + m.nome());
         }
 
-        System.out.println("\nInforme o nome da marca que deseja visualizar\n");
-        var nomeMarca = URLEncoder.encode(scanner.nextLine().toLowerCase(), StandardCharsets.UTF_8);
+        System.out.println("\nInforme o nome da marca que deseja visualizar os modelos disponíveis\n");
+        var nomeMarca = scanner.nextLine();
 
         String codigoMarcaEscolhida = String.valueOf(marcasOrdenadas.stream()
-                .filter(m -> m.nome().equalsIgnoreCase(nomeMarca))
+                .filter(m -> m.nome().contains(nomeMarca))
                 .map(DadosVeiculo::codigo)
-                .findFirst().orElse(0));
+                .findFirst().orElse(null));
 
         json = consumoApi.obterDados(ENDERECO + tipo + "/marcas/" + codigoMarcaEscolhida + "/modelos");
 
-        ModelosResponse response = converteDados.obterDados(json, ModelosResponse.class);
+        ModelosResponse responseModelos = converteDados.obterDados(json, ModelosResponse.class);
 
-        DadosVeiculo[] modelos = response.modelos().toArray(new DadosVeiculo[0]);
+        DadosVeiculo[] modelos = responseModelos.modelos().toArray(new DadosVeiculo[0]);
 
         List<DadosVeiculo> modelosOrdenados = Arrays.stream(modelos)
                 .sorted(Comparator.comparing(DadosVeiculo::codigo))
@@ -72,6 +71,26 @@ public class Principal {
             System.out.println(m.codigo() + " - " + m.nome());
         }
 
+        System.out.println("\nInforme o modelo desejado\n");
+        var nomeModelo = scanner.nextLine();
+
+        String codigoModeloEscolhido = String.valueOf(modelosOrdenados.stream()
+                .filter(m -> m.nome().contains(nomeModelo))
+                .map(DadosVeiculo::codigo)
+                .findFirst().orElse(null));
+
+        json = consumoApi.obterDados(ENDERECO + tipo + "/marcas/" + codigoMarcaEscolhida + "/modelos/" + codigoModeloEscolhido + "/anos");
+
+        DadosModelo[] anosModelo = converteDados.obterDados(json, DadosModelo[].class);
+
+        List<DadosModelo> anosOrdenados = Arrays.stream(anosModelo)
+                .sorted(Comparator.comparing(DadosModelo::codigo))
+                .collect(Collectors.toList());
+
+        System.out.println("\nANOS DO MODELO " + nomeModelo);
+        for (DadosModelo m : anosOrdenados) {
+            System.out.println(m.codigo() + " - " + m.nome());
+        }
 
     }
 }
