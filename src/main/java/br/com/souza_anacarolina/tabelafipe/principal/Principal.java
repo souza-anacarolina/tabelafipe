@@ -1,6 +1,7 @@
 package br.com.souza_anacarolina.tabelafipe.principal;
 
 import br.com.souza_anacarolina.tabelafipe.model.DadosVeiculo;
+import br.com.souza_anacarolina.tabelafipe.model.ModelosResponse;
 import br.com.souza_anacarolina.tabelafipe.service.ConsumoApi;
 import br.com.souza_anacarolina.tabelafipe.service.ConverteDados;
 
@@ -47,11 +48,30 @@ public class Principal {
             System.out.println(m.codigo() + " - " + m.nome());
         }
 
-        System.out.println("De qual marca?");
-        var marca = URLEncoder.encode(scanner.nextLine().toLowerCase(), StandardCharsets.UTF_8);
+        System.out.println("\nDe acordo com a listagem acima informe o código da marca que deseja visualizar");
+        var codigoMarca = URLEncoder.encode(scanner.nextLine().toLowerCase(), StandardCharsets.UTF_8);
+        json = consumoApi.obterDados(ENDERECO + tipo + "/marcas/" + codigoMarca + "/modelos");
 
-        DadosVeiculo dadosVeiculo = converteDados.obterDados(json, DadosVeiculo.class);
-        System.out.println(dadosVeiculo);
+        ModelosResponse response = converteDados.obterDados(json, ModelosResponse.class);
+
+        DadosVeiculo[] modelos = response.modelos().toArray(new DadosVeiculo[0]);
+
+        List<DadosVeiculo> modelosOrdenados = Arrays.stream(modelos)
+                .sorted(Comparator.comparing(DadosVeiculo::codigo))
+                .collect(Collectors.toList());
+
+        int codigo = Integer.parseInt(codigoMarca);
+
+        String nomeMarcaEscolhida = marcasOrdenadas.stream()
+                        .filter(m -> m.codigo() == codigo)
+                                .map(DadosVeiculo::nome)
+                                        .findFirst().orElse("Marca não encontrada");
+
+        System.out.println("\nMODELOS DA MARCA " + nomeMarcaEscolhida + "\n");
+        for (DadosVeiculo m : modelosOrdenados) {
+            System.out.println(m.codigo() + " - " + m.nome());
+        }
+
 
     }
 }
