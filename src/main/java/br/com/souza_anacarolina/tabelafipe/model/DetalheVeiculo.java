@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public record DetalheVeiculo(String Valor,
                              String Marca,
                              String Modelo,
-                             Long anoModelo,
+                             int AnoModelo,
                              String Combustivel,
                              String CodigoFipe,
                              String MesReferencia) {

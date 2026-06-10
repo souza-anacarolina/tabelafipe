@@ -1,17 +1,26 @@
 package br.com.souza_anacarolina.tabelafipe.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 public class InformacoesVeiculo {
 
     String Valor;
     String Marca;
     String Modelo;
-    Long anoModelo;
+    int AnoModelo;
     String Combustivel;
     String CodigoFipe;
     String MesReferencia;
+    LocalDateTime dataConsulta = LocalDateTime.now();
+    Locale ptBr = new Locale("pt", "BR");
+    DateTimeFormatter formatador = DateTimeFormatter.ofPattern("EEEE, dd 'de' MMMM 'de' yyyy HH:mm", ptBr);
 
     public InformacoesVeiculo(DetalheVeiculo detalheVeiculo) {
-        this.anoModelo = detalheVeiculo.anoModelo();
+        this.AnoModelo = detalheVeiculo.AnoModelo();
         this.Marca = detalheVeiculo.Marca();
         this.Modelo = detalheVeiculo.Modelo();
         this.CodigoFipe = detalheVeiculo.CodigoFipe();
@@ -40,8 +49,8 @@ public class InformacoesVeiculo {
         return Marca;
     }
 
-    public Long getAnoModelo() {
-        return anoModelo;
+    public int getAnoModelo() {
+        return AnoModelo;
     }
 
     public String getModelo() {
@@ -50,13 +59,14 @@ public class InformacoesVeiculo {
 
     @Override
     public String toString() {
-        return "Informacoes do Veiculo\n" +
-                "Valor=" + Valor + "\n" +
-                "Marca='" + Marca +    "\n" +
-                "Modelo='" + Modelo  + "\n" +
-                "anoModelo=" + anoModelo + "\n" +
-                "Combustivel='" + Combustivel  + "\n" +
-                "CodigoFipe='" + CodigoFipe  + "\n" +
-                "MesReferencia='" + MesReferencia
+        return "Informações do Veiculo" +
+                "\nMês de Referência: " + MesReferencia + "\n" +
+                "Código Fipe: " + CodigoFipe  + "\n" +
+                "Marca: " + Marca +  "\n" +
+                "Modelo: " + Modelo  + "\n" +
+                "Ano Modelo: " + AnoModelo + "\n" +
+                "Combustível: " + Combustivel  + "\n" +
+                "Data da consulta: " + dataConsulta.format(formatador)  + "\n" +
+                "Valor: " + Valor
                 ;}
 }
