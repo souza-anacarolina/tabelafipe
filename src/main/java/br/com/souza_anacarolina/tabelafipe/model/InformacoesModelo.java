@@ -6,16 +6,16 @@ import java.util.Locale;
 
 public class InformacoesModelo {
 
-    String Valor;
-    String Marca;
-    String Modelo;
-    int AnoModelo;
-    String Combustivel;
-    String CodigoFipe;
-    String MesReferencia;
-    LocalDateTime dataConsulta = LocalDateTime.now();
-    Locale ptBr = new Locale("pt", "BR");
-    DateTimeFormatter formatador = DateTimeFormatter.ofPattern("EEEE, dd 'de' MMMM 'de' yyyy HH:mm", ptBr);
+    private String Valor;
+    private String Marca;
+    private String Modelo;
+    private int AnoModelo;
+    private String Combustivel;
+    private String CodigoFipe;
+    private String MesReferencia;
+    private LocalDateTime dataConsulta = LocalDateTime.now();
+    private Locale ptBr = new Locale("pt", "BR");
+    private DateTimeFormatter formatador = DateTimeFormatter.ofPattern("EEEE, dd 'de' MMMM 'de' yyyy HH:mm", ptBr);
 
     public InformacoesModelo(DetalheVeiculo detalheVeiculo) {
         this.AnoModelo = detalheVeiculo.AnoModelo();
